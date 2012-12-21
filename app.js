@@ -33,13 +33,14 @@ var twitter = new Twitter({
                 console.log(tweet);
                 
                 // set the hashtag
-                var appropriateTag = 'ukapocalypse';
-                hashtags.forEach(function(tag){
-                    if(tweet.text.indexOf(tag)!= -1) {
-                       appropriateTag = tag;
+                var appropriateTag = '';
+                tags.split(',').forEach(function(theTag){
+                console.log(theTag);
+                    if(tweet.text.indexOf(theTag)!=-1) {
+                      appropriateTag = theTag;
                     }
                  });
-                
+                 console.log('tweet for ' + appropriateTag);
                 
                 if(tweet.text.indexOf('RT:')==-1 && tweet.text.indexOf('RT ')==-1)
                 {

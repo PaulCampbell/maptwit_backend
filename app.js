@@ -46,8 +46,8 @@ var twitter = new Twitter({
                 {
                     var t = new Models.Tweet({
                         hashtag: appropriateTag,
-                        from_user:tweet.user.name,
-                        from_user_name: tweet.user.screen_name,
+                        from_user:tweet.user.screen_name,
+                        from_user_name: tweet.user.name,
                         text: tweet.text,
                         profile_image_url: tweet.user.profile_image_url,
                         created_at: tweet.created_at

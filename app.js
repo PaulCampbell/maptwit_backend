@@ -29,15 +29,51 @@ var twitter = new Twitter({
          tags = tags.substring(1, tags.length)
          console.log('collecting twitter updates for ' + tags);
          twitter.stream('statuses/filter', {'track':tags}, function(stream) {
-           stream.on('data', function(data) {
-                console.log(data);
+           stream.on('data', function(tweet) {
+                console.log(tweet);
+                
+                // set the hashtag
+                var appropriateTag = 'ukapocalypse';
+                hashtags.forEach(function(tag){
+                    if(tweet.text.indexOf(tag)!= -1) {
+                       appropriateTag = tag;
+                    }
+                 });
+                
+                
+                if(tweet.text.indexOf('RT:')==-1 && tweet.text.indexOf('RT ')==-1)
+                {
+                    var t = new Models.Tweet({
+                        hashtag: appropriateTag,
+                        from_user:tweet.user.name,
+                        from_user_name: tweet.user.screen_name,
+                        text: tweet.text,
+                        profile_image_url: tweet.user.profile_image_url,
+                        created_at: tweet.created_at
+                    });
+                    if(tweet.geo)
+                    {
+                        t.longitude = tweet.geo.coordinates[0];
+                        t.latitude = tweet.geo.coordinates[1];
+                    }
+
+                    t.setLocationForMaps(function(err,tweetInstance){
+                        if(err)
+                            console.log(err)
+                        else
+                        {
+                            t.save();
+                        }
+                    })
+                }
               });
            stream.on('end', function (response) {
              console.log('ended');
-             console.log(response)
+             start();
            });
            stream.on('destroy', function (response) {
              console.log('destroyed');
+             start();
            });
            });
      }
